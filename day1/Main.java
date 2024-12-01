@@ -7,14 +7,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Main {
-
 	public static void main(String[] args) {
-		String fileName = "day1input.txt";
+		String fileName = "day1/day1input.txt";
 
 		int[] list1 = new int[1000];
 		int[] list2 = new int[1000];
 
-		int lnum = 0; // Keeps track of the number of valid lines read
+		int lnum = 0;
 
 		try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
 			String line;
@@ -31,7 +30,6 @@ public class Main {
 			e.printStackTrace();
 		}
 
-		// Only sort up to the last valid index (lnum - 1)
 		sort(list1, 0, lnum - 1);
 		sort(list2, 0, lnum - 1);
 
@@ -40,7 +38,20 @@ public class Main {
 		System.out.println("Similarity Score: " + findSimilarityScore(list1, list2, lnum));
 	}
 
-	// Merges two subarrays of a[]
+	public static void updateFreq1(Map<Integer, Double> map, int key, int increment) {
+		Double duble = map.get(key); // Get the current Counter object
+		if (duble != null) {
+			duble.setFreq1(duble.getFreq1() + increment);
+		}
+	}
+
+	public static void updateFreq2(Map<Integer, Double> map, int key, int increment) {
+		Double duble = map.get(key); // Get the current Counter object
+		if (duble != null) {
+			duble.setFreq2(duble.getFreq2() + increment);
+		}
+	}
+
 	static void merge(int a[], int l, int m, int r) {
 		int n1 = m - l + 1;
 		int n2 = r - m;
@@ -80,7 +91,6 @@ public class Main {
 		}
 	}
 
-	// Main function that sorts a[l..r] using merge()
 	static void sort(int a[], int l, int r) {
 		if (l < r) {
 			int m = (l + r) / 2;
@@ -93,7 +103,6 @@ public class Main {
 	static int findTotalDist(int[] list1, int[] list2, int lnum) {
 		int total = 0;
 
-		// Set initial indices for the left and right parts of the arrays
 		int l = 0;
 		int r = lnum / 2;
 		int l2 = r - 1;
@@ -121,8 +130,17 @@ public class Main {
 		int score = 0;
 
 		for (int i = 0; i < lnum; ++i) {
-			// if
+			if (!map.containsKey(l1[i])) {
+				map.put(l1[i], new Double(1, 0));
+			} else {
+				updateFreq1(map, l1[i], 1);
+			}
 
+			if (!map.containsKey(l2[i])) {
+				map.put(l2[i], new Double(0, 1));
+			} else {
+				updateFreq2(map, l2[i], 1);
+			}
 		}
 
 		for (Map.Entry<Integer, Double> entry : map.entrySet()) {

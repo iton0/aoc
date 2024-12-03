@@ -1,5 +1,3 @@
-package day1;
-
 public class Double {
 	int freq2;
 	int freq1;
